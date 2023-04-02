@@ -1,0 +1,34 @@
+//@version=5
+indicator("蛟龙10")
+V1 = (close*2+high+low)/4*10
+V2 = ta.ema(V1, 13) - ta.ema(V1, 34)
+V3 = ta.ema(V2,5)
+V4 = 2 * (V2-V3) * 5.5
+
+BTC_H = request.security("BITSTAMP:BTCUSD", "60", high)
+BTC_L = request.security("BITSTAMP:BTCUSD", "60", low)
+BTC_C = request.security("BITSTAMP:BTCUSD", "60", close)
+plot(BTC_C/1000)
+
+V8 = (BTC_C*2 + BTC_H + BTC_L) /4
+V9 = ta.ema(V8 ,13) - ta.ema(V8, 34)
+VA = ta.ema(V9,3)
+VB = (V9 - VA) /2
+
+// 最重要的趋势线
+V11 = 3 * ta.sma((close - ta.lowest(low,55)) / (ta.highest(high,55) -ta.lowest(low,55))*100,5) - 2*ta.sma(ta.sma((close-ta.lowest(low,55))/(ta.highest(high,55)-ta.lowest(low,55)) * 100,5),3)
+
+
+Trend = ta.ema(V11,3)
+
+line_red  = if VB > 0 and Trend < 13
+    20
+else 
+    0
+plot(line_red, style = plot.style_histogram, color = color.red,linewidth = 2)
+
+line_purple = if V4 > 0 and Trend < 13
+    50
+else 
+    0
+plot(line_purple, style = plot.style_histogram, color = color.purple,linewidth = 2)
